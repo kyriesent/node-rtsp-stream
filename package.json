@@ -1,0 +1,21 @@
+{
+  "name": "node-rstp-stream",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "node-rstp-stream"
+  },
+  "author": "David Jsa <david@jsa.me>",
+  "license": "MIT",
+  "devDependencies": {
+    "coffee-script": "^1.8.0"
+  },
+  "dependencies": {
+    "ws": "^0.4.32"
+  }
+}
