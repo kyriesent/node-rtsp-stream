@@ -33,6 +33,34 @@ VideoStream::startMpeg1Stream = ->
   @mpeg1Muxer.on 'mpeg1data', (data) ->
     self.emit 'camdata', data
 
+  gettingInputData = false
+  inputData = []
+
+  gettingOutputData = false
+  outputData = []
+
+  @mpeg1Muxer.on 'ffmpegError', (data) ->
+    data = data.toString()
+
+    if data.indexOf('Input #') isnt -1
+      gettingInputData = true
+    if data.indexOf('Output #') isnt -1
+      gettingInputData = false
+      gettingOutputData = true
+    if data.indexOf('frame') is 0
+      gettingOutputData = false
+
+    if gettingInputData
+      inputData.push data.toString()
+      size = data.match(/\d+x\d+/)
+      if size?
+        size = size[0].split 'x'
+        self.width = parseInt size[0], 10  unless self.width?
+        self.height = parseInt size[1], 10  unless self.height?
+
+  @mpeg1Muxer.on 'ffmpegError', (data) ->
+    global.process.stderr.write data
+
   @
 
 VideoStream::pipeStreamToSocketServer = ->

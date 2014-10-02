@@ -14,8 +14,6 @@ Mpeg1Muxer = (options) ->
     @url
     '-f'
     'mpeg1video'
-    # '-vf'
-    # 'crop=iw-mod(iw\\,2):ih-mod(ih\\,2)'
     '-b:v'
     '800k'
     '-r'
@@ -27,7 +25,8 @@ Mpeg1Muxer = (options) ->
   @stream.stdout.on 'data', (data) ->
     self.emit 'mpeg1data', data
 
-  @stream.stderr.pipe global.process.stderr
+  @stream.stderr.on 'data', (data) ->
+    self.emit 'ffmpegError', data
 
   @
 
