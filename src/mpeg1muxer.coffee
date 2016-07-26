@@ -14,10 +14,6 @@ Mpeg1Muxer = (options) ->
     @url
     '-f'
     'mpeg1video'
-    '-b:v'
-    '800k'
-    '-r'
-    '30'
     '-'
   ], {detached: false}
 
