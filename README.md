@@ -29,4 +29,10 @@ player = new jsmpeg(client, {
 
 ```
 
+Stop stream:
+```
+stream.stop()
+
+```
+
 For more information on how to use jsmpeg to stream video, visit https://github.com/phoboslab/jsmpeg
