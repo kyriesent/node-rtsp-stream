@@ -6,6 +6,7 @@ Mpeg1Muxer = require './mpeg1muxer'
 STREAM_MAGIC_BYTES = "jsmp" # Must be 4 bytes
 
 VideoStream = (options) ->
+  @options = options
   @name = options.name
 
   @streamUrl = options.streamUrl
@@ -25,9 +26,17 @@ VideoStream = (options) ->
 
 util.inherits VideoStream, events.EventEmitter
 
+VideoStream::stop = ->
+  @wsServer.close();
+  @stream.kill();
+  @inputStreamStarted = false;
+  return @;
+
 VideoStream::startMpeg1Stream = ->
   @mpeg1Muxer = new Mpeg1Muxer
+    ffmpegOptions: @options.ffmpegOptions
     url: @streamUrl
+  @.stream = @.mpeg1Muxer.stream;
   self = @
   return  if @inputStreamStarted
   @mpeg1Muxer.on 'mpeg1data', (data) ->

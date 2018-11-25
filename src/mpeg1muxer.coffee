@@ -6,16 +6,27 @@ Mpeg1Muxer = (options) ->
   self = @
   
   @url = options.url
+  @ffmpegOptions = options.ffmpegOptions
 
-  @stream = child_process.spawn "ffmpeg", [
+  @additionalFlags = []
+  if @ffmpegOptions 
+    for key of @ffmpegOptions
+      @additionalFlags.push(key, String(@ffmpegOptions[key]))
+
+  @spawnOptions = [
     "-rtsp_transport"
     "tcp"
     "-i"
     @url
     '-f'
     'mpeg1video'
+    # additional ffmpeg options go here
+    @additionalFlags...
     '-'
-  ], {detached: false}
+  ]
+  console.log(@spawnOptions)
+
+  @stream = child_process.spawn "ffmpeg", @spawnOptions, {detached: false}
 
   @inputStreamStarted = true
   @stream.stdout.on 'data', (data) ->

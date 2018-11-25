@@ -7,4 +7,13 @@ describe 'node-rstp-stream', ->
       wsPort: 9999
       width: 240
       height: 160
-    done()
+      ffmpegOptions: 
+        test: true
+
+    # Must use setTimeout because we need the stream instantiated before we can stop it
+    # otherwise it blocks the test runner from exiting.
+    setTimeout(() => 
+      videoStream.stop()
+      done()
+    )
+    
