@@ -4,16 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "build": "coffee --compile --output ./lib ./src",
+    "prepublish": "npm run test && npm run build",
+    "test": "npm run build && mocha test/*.coffee"
   },
   "repository": {
     "type": "git",
-    "url": "node-rstp-stream"
+    "url": "https://github.com/kyriesent/node-rtsp-stream.git"
   },
   "author": "David Jsa <david@jsa.me>",
   "license": "MIT",
   "devDependencies": {
-    "coffee-script": "^1.8.0"
+    "coffeescript": "^2.3.2",
+    "mocha": "^5.2.0"
   },
   "dependencies": {
     "ws": "^0.4.32"
