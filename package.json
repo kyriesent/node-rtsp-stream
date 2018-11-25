@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "node-rstp-stream"
+    "url": "https://github.com/kyriesent/node-rtsp-stream.git"
   },
   "author": "David Jsa <david@jsa.me>",
   "license": "MIT",
