@@ -24,7 +24,6 @@ Mpeg1Muxer = (options) ->
     @additionalFlags...
     '-'
   ]
-  console.log(@spawnOptions)
 
   @stream = child_process.spawn "ffmpeg", @spawnOptions, {detached: false}
 
