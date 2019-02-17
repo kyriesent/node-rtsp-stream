@@ -48,7 +48,7 @@ VideoStream::startMpeg1Stream = ->
   gettingOutputData = false
   outputData = []
 
-  @mpeg1Muxer.on 'ffmpegError', (data) ->
+  @mpeg1Muxer.on 'ffmpegStderr', (data) ->
     data = data.toString()
 
     if data.indexOf('Input #') isnt -1
@@ -67,8 +67,11 @@ VideoStream::startMpeg1Stream = ->
         self.width = parseInt size[0], 10  unless self.width?
         self.height = parseInt size[1], 10  unless self.height?
 
-  @mpeg1Muxer.on 'ffmpegError', (data) ->
+  @mpeg1Muxer.on 'ffmpegStderr', (data) ->
     global.process.stderr.write data
+
+  @mpeg1Muxer.on 'exitWithError', =>
+    @emit 'exitWithError'
 
   @
 
