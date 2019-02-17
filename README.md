@@ -18,7 +18,7 @@ stream = new Stream({
   wsPort: 9999,
   ffmpegOptions: { // options ffmpeg flags
     '-stats': '', // an option with no neccessary value uses a blank string
-    '-force_fps': 30 // options with required values specify the value after the key
+    '-r': 30 // options with required values specify the value after the key
   }
 });
     
