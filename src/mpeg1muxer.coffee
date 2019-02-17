@@ -11,7 +11,8 @@ Mpeg1Muxer = (options) ->
   @additionalFlags = []
   if @ffmpegOptions 
     for key of @ffmpegOptions
-      @additionalFlags.push(key, String(@ffmpegOptions[key]))
+      @additionalFlags.push key
+      @additionalFlags.push String(@ffmpegOptions[key]) unless String(@ffmpegOptions[key]) is ''
 
   @spawnOptions = [
     "-rtsp_transport"
