@@ -1,3 +1,5 @@
+assert = require 'assert'
+
 describe 'node-rstp-stream', ->
   VideoStream = require '../'
   it 'should not throw an error when instantiated', (done) ->
@@ -7,13 +9,19 @@ describe 'node-rstp-stream', ->
       wsPort: 9999
       width: 240
       height: 160
-      ffmpegOptions: 
-        test: true
+      ffmpegOptions:
+        '-stats': ''
+        '-r': '30'
+
+    videoStream.on 'exitWithError', =>
+      videoStream.stop()
+      assert.fail 'videoStream exited with error'
+      done()
 
     # Must use setTimeout because we need the stream instantiated before we can stop it
     # otherwise it blocks the test runner from exiting.
     setTimeout(() => 
       videoStream.stop()
       done()
-    )
+    , 1900)
     

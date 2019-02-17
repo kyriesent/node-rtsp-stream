@@ -7,6 +7,7 @@ Mpeg1Muxer = (options) ->
   
   @url = options.url
   @ffmpegOptions = options.ffmpegOptions
+  @exitCode = undefined
 
   @additionalFlags = []
   if @ffmpegOptions 
@@ -33,7 +34,14 @@ Mpeg1Muxer = (options) ->
     self.emit 'mpeg1data', data
 
   @stream.stderr.on 'data', (data) ->
-    self.emit 'ffmpegError', data
+    self.emit 'ffmpegStderr', data
+
+  @stream.on 'exit', (code, signal) =>
+    if code is 1
+      console.error 'RTSP stream exited with error'
+      @exitCode = 1
+      @emit 'exitWithError'
+
 
   @
 
