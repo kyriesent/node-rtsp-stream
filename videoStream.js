@@ -18,7 +18,7 @@ VideoStream = function(options) {
   this.height = options.height;
   this.wsPort = options.wsPort;
   this.inputStreamStarted = false;
-  this.stream = void 0;
+  this.stream = undefined;
   this.startMpeg1Stream();
   this.pipeStreamToSocketServer();
   return this;
