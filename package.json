@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "coffee --compile --output ./lib ./src",
-    "prepublish": "npm run test && npm run build",
-    "test": "npm run build && mocha test/*.coffee"
+    "prepublish": "npm run test",
+    "test": "mocha test/*.js"
   },
   "repository": {
     "type": "git",
@@ -15,7 +14,6 @@
   "author": "David Jsa <david@jsa.me>",
   "license": "MIT",
   "devDependencies": {
-    "coffeescript": "^2.3.2",
     "mocha": "^5.2.0"
   },
   "dependencies": {
