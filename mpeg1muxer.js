@@ -8,8 +8,7 @@ util = require('util');
 events = require('events');
 
 Mpeg1Muxer = function(options) {
-  var key, self;
-  self = this;
+  var key;
   this.url = options.url;
   this.ffmpegOptions = options.ffmpegOptions;
   this.exitCode = undefined;
@@ -37,11 +36,11 @@ Mpeg1Muxer = function(options) {
     detached: false
   });
   this.inputStreamStarted = true;
-  this.stream.stdout.on('data', function(data) {
-    return self.emit('mpeg1data', data);
+  this.stream.stdout.on('data', (data) => {
+    return this.emit('mpeg1data', data);
   });
-  this.stream.stderr.on('data', function(data) {
-    return self.emit('ffmpegStderr', data);
+  this.stream.stderr.on('data', (data) => {
+    return this.emit('ffmpegStderr', data);
   });
   this.stream.on('exit', (code, signal) => {
     if (code === 1) {
