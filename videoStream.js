@@ -94,11 +94,11 @@ VideoStream.prototype.pipeStreamToSocketServer = function() {
     return this.onSocketConnect(socket)
   })
   this.wsServer.broadcast = function(data, opts) {
-    var i, results
+    var results
     results = []
-    for (i in this.clients) {
-      if (this.clients[i].readyState === 1) {
-        results.push(this.clients[i].send(data, opts))
+    for (let client of this.clients) {
+      if (client.readyState === 1) {
+        results.push(client.send(data, opts))
       } else {
         results.push(console.log("Error: Client (" + i + ") not connected."))
       }
@@ -121,9 +121,9 @@ VideoStream.prototype.onSocketConnect = function(socket) {
   socket.send(streamHeader, {
     binary: true
   })
-  console.log(`${this.name}: New WebSocket Connection (` + this.wsServer.clients.length + " total)")
+  console.log(`${this.name}: New WebSocket Connection (` + this.wsServer.clients.size + " total)")
   return socket.on("close", (code, message) => {
-    return console.log(`${this.name}: Disconnected WebSocket (` + this.wsServer.clients.length + " total)")
+    return console.log(`${this.name}: Disconnected WebSocket (` + this.wsServer.clients.size + " total)")
   })
 }
 
