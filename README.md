@@ -26,11 +26,18 @@ stream = new Stream({
 
 On client:
 ```
-client = new WebSocket('ws://localhost:9999')
-player = new jsmpeg(client, {
-  canvas: canvas // Canvas should be a canvas DOM element
-})
+<html>
+<body>
+	<canvas id="canvas"></canvas>
+</body>
 
+<script type="text/javascript" src="jsmpeg.min.js"></script>
+<script type="text/javascript">
+	player = new JSMpeg.Player('ws://localhost:9999', {
+	  canvas: document.getElementById('canvas') // Canvas should be a canvas DOM element
+	})	
+</script>
+</html>
 ```
 
 For more information on how to use jsmpeg to stream video, visit https://github.com/phoboslab/jsmpeg
