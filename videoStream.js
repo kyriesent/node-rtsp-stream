@@ -90,8 +90,8 @@ VideoStream.prototype.pipeStreamToSocketServer = function() {
   this.wsServer = new ws.Server({
     port: this.wsPort
   })
-  this.wsServer.on("connection", (socket) => {
-    return this.onSocketConnect(socket)
+  this.wsServer.on("connection", (socket, request) => {
+    return this.onSocketConnect(socket, request)
   })
   this.wsServer.broadcast = function(data, opts) {
     var results
@@ -100,7 +100,7 @@ VideoStream.prototype.pipeStreamToSocketServer = function() {
       if (client.readyState === 1) {
         results.push(client.send(data, opts))
       } else {
-        results.push(console.log("Error: Client (" + i + ") not connected."))
+        results.push(console.log("Error: Client from remoteAddress " + client.remoteAddress + " not connected."))
       }
     }
     return results
@@ -110,7 +110,7 @@ VideoStream.prototype.pipeStreamToSocketServer = function() {
   })
 }
 
-VideoStream.prototype.onSocketConnect = function(socket) {
+VideoStream.prototype.onSocketConnect = function(socket, request) {
   var streamHeader
   // Send magic bytes and video size to the newly connected socket
   // struct { char magic[4]; unsigned short width, height;}
@@ -122,6 +122,9 @@ VideoStream.prototype.onSocketConnect = function(socket) {
     binary: true
   })
   console.log(`${this.name}: New WebSocket Connection (` + this.wsServer.clients.size + " total)")
+
+  socket.remoteAddress = request.connection.remoteAddress
+
   return socket.on("close", (code, message) => {
     return console.log(`${this.name}: Disconnected WebSocket (` + this.wsServer.clients.size + " total)")
   })
