@@ -37,7 +37,8 @@ VideoStream.prototype.startMpeg1Stream = function() {
   var gettingInputData, gettingOutputData, inputData, outputData
   this.mpeg1Muxer = new Mpeg1Muxer({
     ffmpegOptions: this.options.ffmpegOptions,
-    url: this.streamUrl
+    url: this.streamUrl,
+    ffmpegPath: this.options.ffmpegPath == undefined ? "ffmpeg" : this.options.ffmpegPath
   })
   this.stream = this.mpeg1Muxer.stream
   if (this.inputStreamStarted) {
