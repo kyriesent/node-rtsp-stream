@@ -17,6 +17,7 @@ VideoStream = function(options) {
   this.width = options.width
   this.height = options.height
   this.wsPort = options.wsPort
+  this.isDisableLogs = options.isDisableLogs
   this.inputStreamStarted = false
   this.stream = undefined
   this.startMpeg1Stream()
@@ -78,8 +79,10 @@ VideoStream.prototype.startMpeg1Stream = function() {
       }
     }
   })
-  this.mpeg1Muxer.on('ffmpegStderr', function(data) {
-    return global.process.stderr.write(data)
+  this.mpeg1Muxer.on('ffmpegStderr', (data) => {
+    if (!this.isDisableLogs) {
+      return global.process.stderr.write(data)
+    }
   })
   this.mpeg1Muxer.on('exitWithError', () => {
     return this.emit('exitWithError')
