@@ -10,6 +10,7 @@ Mpeg1Muxer = function(options) {
   var key
   this.url = options.url
   this.ffmpegOptions = options.ffmpegOptions
+  this.spawnCustomOptions = options.spawnCustomOptions || {}
   this.exitCode = undefined
   this.additionalFlags = []
   if (this.ffmpegOptions) {
@@ -34,7 +35,8 @@ Mpeg1Muxer = function(options) {
     '-'
   ]
   this.stream = child_process.spawn(options.ffmpegPath, this.spawnOptions, {
-    detached: false
+    detached: false,
+    ...this.spawnCustomOptions
   })
   this.inputStreamStarted = true
   this.stream.stdout.on('data', (data) => {

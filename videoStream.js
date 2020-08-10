@@ -36,6 +36,7 @@ VideoStream.prototype.stop = function() {
 VideoStream.prototype.startMpeg1Stream = function() {
   var gettingInputData, gettingOutputData, inputData, outputData
   this.mpeg1Muxer = new Mpeg1Muxer({
+    spawnCustomOptions: this.options.spawnCustomOptions,
     ffmpegOptions: this.options.ffmpegOptions,
     url: this.streamUrl,
     ffmpegPath: this.options.ffmpegPath == undefined ? "ffmpeg" : this.options.ffmpegPath
