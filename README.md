@@ -40,6 +40,51 @@ On client:
 </html>
 ```
 
+Multiple streaming solutions:
+```
+var server = http.createServer(app);
+const WebSocket = require('ws');
+const wss1 = new WebSocket.Server({ noServer: true });
+const wss2 = new WebSocket.Server({ noServer: true });
+const stream1 = new Stream({
+  name: 'name',
+  streamUrl: 'rtsp://wss1-address/',
+  Server: wss1,
+  ffmpegOptions: { 
+    '-stats': '', 
+    '-r': 30 
+  }
+})
+
+const stream2 = new Stream({
+  name: 'name',
+  streamUrl: 'rtsp://wss2-address',
+  Server: wss2,
+  ffmpegOptions: { 
+    '-stats': '', 
+    '-r': 30 
+  }
+})
+
+server.on('upgrade', function upgrade(request, socket, head) {
+  console.log('upgrade');
+  const pathname = url.parse(request.url).pathname;
+  if (pathname === '/foo') {
+    wss1.handleUpgrade(request, socket, head, function done(ws) {
+      wss1.emit('connection', ws, request);
+    });
+  } else if (pathname === '/bar') {
+    wss2.handleUpgrade(request, socket, head, function done(ws) {
+      wss2.emit('connection', ws, request);
+    });
+  } else {
+    socket.destroy();
+  }
+});
+
+server.listen(3000);
+```
+
 For more information on how to use jsmpeg to stream video, visit https://github.com/phoboslab/jsmpeg
 
 Please note that framerate from cameras must be greater than or equal to 15fps for mpeg1 encoding, otherwise ffmpeg errors will prevent video encoding to occur. If you have a camera with advanced configuration options, make sure it streams video at a recommended 25fps.
