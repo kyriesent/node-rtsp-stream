@@ -14,7 +14,9 @@
   "author": "David Jsa <david@jsa.me>",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "^5.2.0"
+    "http": "^0.0.1-security",
+    "mocha": "^5.2.0",
+    "url": "^0.11.0"
   },
   "dependencies": {
     "ws": "^7.0.0"
