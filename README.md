@@ -10,7 +10,7 @@ $ npm install node-rtsp-stream
 ```
 
 On server:
-```
+```js
 Stream = require('node-rtsp-stream')
 stream = new Stream({
   name: 'name',
@@ -25,7 +25,7 @@ stream = new Stream({
 ```
 
 On client:
-```
+```html
 <html>
 <body>
 	<canvas id="canvas"></canvas>
@@ -41,7 +41,7 @@ On client:
 ```
 
 Multiple streaming solutions:
-```
+```js
 var server = http.createServer(app);
 const WebSocket = require('ws');
 const wss1 = new WebSocket.Server({ noServer: true });
@@ -82,7 +82,28 @@ server.on('upgrade', function upgrade(request, socket, head) {
   }
 });
 
-server.listen(3000);
+server.listen(9999);
+```
+
+Multiple streaming on client
+```html
+  <html>
+<body>
+	<canvas id="canvas"></canvas>
+  <canvas id="canvas2"></canvas>
+</body>
+
+<script type="text/javascript" src="jsmpeg.min.js"></script>
+<script type="text/javascript">
+	player = new JSMpeg.Player('ws://localhost:9999/foo', {
+	  canvas: document.getElementById('canvas') // Canvas should be a canvas DOM element
+  })	
+  
+  player2 = new JSMpeg.Player('ws://localhost:9999/bar', {
+	  canvas: document.getElementById('canvas2') // Canvas should be a canvas DOM element
+	})	
+</script>
+</html>
 ```
 
 For more information on how to use jsmpeg to stream video, visit https://github.com/phoboslab/jsmpeg
