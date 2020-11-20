@@ -89,12 +89,7 @@ VideoStream.prototype.startMpeg1Stream = function() {
 }
 
 VideoStream.prototype.pipeStreamToSocketServer = function() {
-  if (!this.Server || !this.wsServer ){
-    throw new Error(
-      'One of the "wsServer", "Server" options must be specified'
-    );
-  }
-  
+
   this.wsServer = this.Server || new ws.Server({
     port: this.wsPort
   })
