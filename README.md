@@ -87,22 +87,24 @@ server.listen(9999);
 
 Multiple streaming on client
 ```html
-  <html>
+<html>
+
 <body>
-	<canvas id="canvas"></canvas>
-  <canvas id="canvas2"></canvas>
+    <canvas id="canvas"></canvas>
+    <canvas id="canvas2"></canvas>
 </body>
 
 <script type="text/javascript" src="jsmpeg.min.js"></script>
 <script type="text/javascript">
-	player = new JSMpeg.Player('ws://localhost:9999/foo', {
-	  canvas: document.getElementById('canvas') // Canvas should be a canvas DOM element
-  })	
-  
-  player2 = new JSMpeg.Player('ws://localhost:9999/bar', {
-	  canvas: document.getElementById('canvas2') // Canvas should be a canvas DOM element
-	})	
+    player = new JSMpeg.Player('ws://localhost:9999/foo', {
+        canvas: document.getElementById('canvas') // Canvas should be a canvas DOM element
+    })
+
+    player2 = new JSMpeg.Player('ws://localhost:9999/bar', {
+        canvas: document.getElementById('canvas2') // Canvas should be a canvas DOM element
+    })	
 </script>
+
 </html>
 ```
 
