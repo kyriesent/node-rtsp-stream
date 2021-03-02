@@ -1,11 +1,10 @@
 {
-  "name": "node-rtsp-stream",
-  "version": "0.0.8",
+  "name": "cubic-rtsp-stream",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prepublish": "npm run test",
-    "test": "mocha test/*.js"
+    "prepublish": "npm run test"
   },
   "repository": {
     "type": "git",
