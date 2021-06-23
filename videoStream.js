@@ -12,6 +12,8 @@ STREAM_MAGIC_BYTES = "jsmp" // Must be 4 bytes
 
 VideoStream = function(options) {
   this.options = options
+  this.server = options.server
+  this.path = options.wsPath
   this.name = options.name
   this.streamUrl = options.streamUrl
   this.width = options.width
@@ -89,7 +91,9 @@ VideoStream.prototype.startMpeg1Stream = function() {
 
 VideoStream.prototype.pipeStreamToSocketServer = function() {
   this.wsServer = new ws.Server({
-    port: this.wsPort
+    port: this.server ? undefined : this.wsPort,
+    server: this.server,
+    path: this.path
   })
   this.wsServer.on("connection", (socket, request) => {
     return this.onSocketConnect(socket, request)
@@ -115,7 +119,7 @@ VideoStream.prototype.onSocketConnect = function(socket, request) {
   var streamHeader
   // Send magic bytes and video size to the newly connected socket
   // struct { char magic[4]; unsigned short width, height;}
-  streamHeader = new Buffer(8)
+  streamHeader = Buffer.alloc(8)
   streamHeader.write(STREAM_MAGIC_BYTES)
   streamHeader.writeUInt16BE(this.width, 4)
   streamHeader.writeUInt16BE(this.height, 6)
