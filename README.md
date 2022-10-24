@@ -1,6 +1,8 @@
 node-rtsp-stream
 ================
 
+**Added support for using exists http server**
+
 Stream any RTSP stream and output to websocket for consumption by [jsmpeg](https://github.com/phoboslab/jsmpeg). HTML5 streaming video! (Requires ffmpeg)
 
 Usage:
