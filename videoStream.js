@@ -122,11 +122,14 @@ VideoStream.prototype.onSocketConnect = function(socket, request) {
   socket.send(streamHeader, {
     binary: true
   })
+
+  this.emit('clientCount',this.name,this.wsServer.clients.size);
   console.log(`${this.name}: New WebSocket Connection (` + this.wsServer.clients.size + " total)")
 
   socket.remoteAddress = request.connection.remoteAddress
 
   return socket.on("close", (code, message) => {
+    this.emit('clientCount',this.name,this.wsServer.clients.size);
     return console.log(`${this.name}: Disconnected WebSocket (` + this.wsServer.clients.size + " total)")
   })
 }
