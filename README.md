@@ -1,30 +1,105 @@
-node-rtsp-stream
-================
+# node-rtsp-stream (Enhanced Multi-Stream Version)
 
-Stream any RTSP stream and output to websocket for consumption by [jsmpeg](https://github.com/phoboslab/jsmpeg). HTML5 streaming video! (Requires ffmpeg)
+A extension of the original **node-rtsp-stream**, supporting:
 
-Usage:
+- Multiple RTSP streams simultaneously  
+- A single WebSocket server with path-based routing  
+- Safe metadata handling (no more null width/height)  
+- Flexible FFmpeg option overrides  
+- Compatibility with **JSMpeg** (Player API) *and* **jsmpeg** (WebSocket API)
 
+This version improves scalability, modularity, and real-world usability for multi-camera systems.
+
+---
+
+## Features
+
+### 1. Multi-stream WebSocket Server
+Instead of running one WebSocket server **per stream**, this version introduces:
+A **single** WebSocket server handles all streams, and each path maps to a unique RTSP source.
+
+### 2. Modular Architecture
+The old `VideoStream` class handled too many responsibilities.  
+It is now **cleanly separated** into:
+
+| Class | Responsibility |
+|-------|----------------|
+| `RtspMpegSource` | RTSP → FFmpeg → MPEG1 decoding |
+| `MultiStreamServer` | WebSocket routing, multiplexing, client handling |
+
+### 3. Metadata Safety (width/height)
+Headers are now sent **only after** metadata is parsed from FFmpeg.  
+Clients connecting early are queued until metadata becomes ready.
+
+### 4. Flexible FFmpeg Options
+Users can override:
+
+- `-f`
+- `-codec:v`
+- Any ffmpeg flag
+
+This ensures backwards compatibility with:
+
+| Player | Required FFmpeg Format |
+|--------|------------------------|
+| **JSMpeg** | requires: `-f mpegts` + `-codec:v mpeg1video` |
+| **jsmpeg** | must **not** receive these options |
+
+Both players are now supported.
+
+---
+
+# Usage
 ```
 $ npm install node-rtsp-stream
 ```
-
 On server:
 ```
-Stream = require('node-rtsp-stream')
-stream = new Stream({
-  name: 'name',
-  streamUrl: 'rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov',
-  wsPort: 9999,
-  ffmpegOptions: { // options ffmpeg flags
-    '-stats': '', // an option with no neccessary value uses a blank string
-    '-r': 30 // options with required values specify the value after the key
-  }
-})
+const MultiStreamServer = require('node-rtsp-stream/MultiStreamServer');
+
+const rtspMap = {
+  cam01: "rtsp://example.com/cam01",
+  cam02: "rtsp://example.com/cam02"
+};
+
+new MultiStreamServer({
+  port: 9999,
+
+  // optional FFmpeg flags
+  ffmpegOptions: {
+    '-stats': '',
+    '-r': 30
+  },
+
+  // developer defines how wsPath → RTSP URL is resolved
+  callbackGetRtspUrl: async (path) => rtspMap[path],
+
+  // optional cleanup logic
+  shouldCloseConnection: (msg) => {
+      return ["stop", "quit", "close"].includes(msg.action);
+  },
+});
+
     
 ```
+On client Two client-side players are supported:
+1) jsmpeg (WebSocket constructor)
+```
+<html>
+<body>
+	<canvas id="canvas"></canvas>
+</body>
 
-On client:
+<script type="text/javascript" src="jsmpeg.min.js"></script>
+<script type="text/javascript">
+	const player = new jsmpeg(
+    new WebSocket("ws://localhost:9999/cam01"),
+    { canvas: document.getElementById("canvas") }
+  );
+</script>
+</html>
+```
+2) JSMpeg (Player API)
 ```
 <html>
 <body>
@@ -39,7 +114,3 @@ On client:
 </script>
 </html>
 ```
-
-For more information on how to use jsmpeg to stream video, visit https://github.com/phoboslab/jsmpeg
-
-Please note that framerate from cameras must be greater than or equal to 15fps for mpeg1 encoding, otherwise ffmpeg errors will prevent video encoding to occur. If you have a camera with advanced configuration options, make sure it streams video at a recommended 25fps.
